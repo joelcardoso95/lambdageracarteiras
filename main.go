@@ -24,4 +24,5 @@ func LambdaExecute(context context.Context) (string, error) {
 	}
 
 	return "Successfully processed CSV", nil*/
+	return "Successfully processed CSV", nil
 }
