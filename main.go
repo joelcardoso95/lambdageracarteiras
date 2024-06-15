@@ -14,7 +14,8 @@ func main() {
 }
 
 func LambdaExecute(context context.Context) (string, error) {
-	people, err := service.ReadCSV("./users.csv")
+	file, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva/excel", "users.csv")
+	people, err := service.ReadCSV(file.Name())
 	if err != nil {
 		log.Fatalf("Failed to read CSV: %v", err)
 		return "", err
