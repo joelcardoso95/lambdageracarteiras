@@ -6,9 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"os"
 
-	pdf "github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/lambdageracarteiras/service"
 )
@@ -18,8 +16,6 @@ func main() {
 }
 
 func LambdaExecute(context context.Context) (string, error) {
-	// make sure we look for the included wkhtmltopdf binary
-	os.Setenv("WKHTMLTOPDF_PATH", os.Getenv("LAMBDA_TASK_ROOT"))
 	var htmlBuffer bytes.Buffer
 	s3File, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva", "excel/users.csv")
 	if err != nil {
@@ -38,15 +34,7 @@ func LambdaExecute(context context.Context) (string, error) {
 			log.Fatalf("Failed to execute template: %v", err)
 			return "", err
 		}
-		pdfGen, err := pdf.NewPDFGenerator()
-		if err != nil {
-			log.Fatalf("Failed to create PDF generator: %v", err)
-			return "", err
-		}
-		page := pdf.NewPageReader(bytes.NewReader(htmlBuffer.Bytes()))
-		pdfGen.AddPage(page)
-		pdfGen.WriteFile("/tmp/pdf/" + person.Name + ".pdf")
 	}
 
-	return "Successfully generated PDF Files", nil
+	return "Successfully generated HTML Files", nil
 }

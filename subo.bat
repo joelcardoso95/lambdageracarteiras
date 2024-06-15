@@ -1,5 +1,5 @@
 git add .
-git commit -m "teste pdf 2"
+git commit -m "teste HTML"
 git push
 set GOOS=linux
 set GOARCH=arm64
