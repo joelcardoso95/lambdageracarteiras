@@ -1,5 +1,5 @@
 git add .
-git commit -m "buscando arquivo bucket s3"
+git commit -m "teste"
 git push
 set GOOS=linux
 set GOARCH=arm64

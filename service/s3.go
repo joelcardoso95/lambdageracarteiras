@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, error) {
+func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) {
 	// create a session
 	s3Session := session.Must(session.NewSession())
 
@@ -19,11 +19,11 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 	// create a file to write the S3 Object contents to.
 	file, err := os.Create("downloaded.csv")
 	if err != nil {
-		return nil, err
+		log.Fatalf("Failed to download CSV: %v", err)
 	}
 
 	// download the file from S3
-	_, err = downloader.Download(file, &s3.GetObjectInput{
+	n, err := downloader.Download(file, &s3.GetObjectInput{
 		Bucket: &bucket,
 		Key:    &dowloadFileName,
 	})
@@ -31,5 +31,5 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 		log.Fatalf("Failed to download CSV: %v", err)
 	}
 
-	return file, nil
+	log.Printf("file downloaded, %d bytes\n", n)
 }
