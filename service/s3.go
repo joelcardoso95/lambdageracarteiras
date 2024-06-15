@@ -28,7 +28,7 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) {
 		Key:    &dowloadFileName,
 	})
 	if err != nil {
-		log.Fatalf("Failed to download CSV: %v", err)
+		log.Fatalf("Failed to download from S3: %v", err)
 	}
 
 	log.Printf("file downloaded, %d bytes\n", n)
