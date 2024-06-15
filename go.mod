@@ -3,6 +3,7 @@ module github.com/lambdageracarteiras
 go 1.22.4
 
 require (
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2 // indirect
 	github.com/aws/aws-lambda-go v1.47.0 // indirect
 	github.com/aws/aws-sdk-go v1.54.2 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.27.2 // indirect

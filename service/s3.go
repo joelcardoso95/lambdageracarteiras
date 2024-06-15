@@ -35,3 +35,25 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 	log.Printf("file downloaded, %d bytes\n", n)
 	return file, nil
 }
+
+func UploadFileToS3Bucket(bucket string, uploadFileName string, file *os.File) error {
+	// create a session
+	s3Session := session.Must(session.NewSession())
+
+	// create an uploader
+	uploader := s3manager.NewUploader(s3Session)
+
+	// upload the file to S3
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: &bucket,
+		Key:    &uploadFileName,
+		Body:   file,
+	})
+	if err != nil {
+		log.Fatalf("Failed to upload file to S3: %v", err)
+		return err
+	}
+
+	log.Printf("file uploaded successfully")
+	return nil
+}
