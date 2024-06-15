@@ -1,5 +1,5 @@
 git add .
-git commit -m "teste 4"
+git commit -m "teste leitura arquivo baixado"
 git push
 set GOOS=linux
 set GOARCH=arm64
