@@ -1,5 +1,5 @@
 git add .
-git commit -m "teste geracao de PDF a partir do CSV"
+git commit -m "teste 8"
 git push
 set GOOS=linux
 set GOARCH=arm64
