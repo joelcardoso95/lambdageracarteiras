@@ -22,6 +22,7 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 		return nil, err
 	}
 
+	log.Printf("starting s3 download")
 	// download the file from S3
 	n, err := downloader.Download(file, &s3.GetObjectInput{
 		Bucket: &bucket,

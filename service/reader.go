@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"os"
 
 	"github.com/gocarina/gocsv"
@@ -8,6 +9,7 @@ import (
 )
 
 func ReadCSV(filePath string) ([]*models.Person, error) {
+	log.Printf("starting csv read")
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -19,5 +21,6 @@ func ReadCSV(filePath string) ([]*models.Person, error) {
 		return nil, err
 	}
 
+	log.Printf("read %d people from csv\n", len(people))
 	return people, nil
 }
