@@ -19,7 +19,7 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 	// create a file to write the S3 Object contents to.
 	file, err := os.Create("downloaded.csv")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// download the file from S3
