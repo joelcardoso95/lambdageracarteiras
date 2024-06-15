@@ -1,5 +1,5 @@
 git add .
-git commit -m "Configs inicias"
+git commit -m "ajuste"
 git push
 set GOOS=linux
 set GOARCH=arm64
