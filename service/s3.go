@@ -17,7 +17,7 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) {
 	downloader := s3manager.NewDownloader(s3Session)
 
 	// create a file to write the S3 Object contents to.
-	file, err := os.Create("downloaded.csv")
+	file, err := os.Create("/tmp/downloaded.csv")
 	if err != nil {
 		log.Fatalf("Failed to download CSV: %v", err)
 	}
