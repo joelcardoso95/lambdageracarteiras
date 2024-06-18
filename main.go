@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"os"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -17,6 +18,8 @@ func main() {
 }
 
 func LambdaExecute(context context.Context) (string, error) {
+	// make sure we look for the included wkhtmltopdf binary
+	os.Setenv("WKHTMLTOPDF_PATH", os.Getenv("LAMBDA_TASK_ROOT"))
 	var htmlBuffer bytes.Buffer
 	s3File, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva", "excel/users.csv")
 	if err != nil {
