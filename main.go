@@ -42,6 +42,7 @@ func LambdaExecute(context context.Context) (string, error) {
 		}
 		page := wkhtmltopdf.NewPageReader(bytes.NewReader(htmlBuffer.Bytes()))
 		pdfGen.AddPage(page)
+		pdfGen.Orientation.Set(wkhtmltopdf.OrientationPortrait)
 		pdfGen.WriteFile("/tmp/pdf/" + person.Name + ".pdf")
 	}
 

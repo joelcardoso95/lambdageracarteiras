@@ -1,5 +1,5 @@
 git add .
-git commit -m "PDF Generator"
+git commit -m "PDF Generator test"
 git push
 set GOOS=linux
 set GOARCH=arm64
