@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"os"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -18,8 +17,6 @@ func main() {
 }
 
 func LambdaExecute(context context.Context) (string, error) {
-	// make sure we look for the included wkhtmltopdf binary
-	os.Setenv("WKHTMLTOPDF_PATH", os.Getenv("LAMBDA_TASK_ROOT"))
 	var htmlBuffer bytes.Buffer
 	s3File, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva", "excel/users.csv")
 	if err != nil {
@@ -33,7 +30,14 @@ func LambdaExecute(context context.Context) (string, error) {
 
 	for _, person := range people {
 		fmt.Printf("Name: %s, Gender: %s\n", person.Name, person.Gender)
-		err := template.Must(template.New(person.Name).Parse("templates/carteira.html")).Execute(&htmlBuffer, person)
+
+		tmpl, err := template.ParseFiles("carteira.html")
+		if err != nil {
+			log.Fatalf("Failed to execute template: %v", err)
+			return "", err
+		}
+		err = tmpl.Execute(&htmlBuffer, person)
+		log.Println("Successfully generated HTML Files")
 		if err != nil {
 			log.Fatalf("Failed to execute template: %v", err)
 			return "", err
@@ -47,6 +51,8 @@ func LambdaExecute(context context.Context) (string, error) {
 		pdfGen.AddPage(page)
 		pdfGen.Orientation.Set(wkhtmltopdf.OrientationPortrait)
 		pdfGen.WriteFile("/tmp/pdf/" + person.Name + ".pdf")
+		service.UploadFileToS3Bucket("carteiras-adviladiva", "pdf/"+person.Name+".pdf", pdfGen.Bytes())
+		log.Println("Successfully Uploaded PDF Files to S3 Bucket")
 	}
 
 	return "Successfully generated PDF Files", nil

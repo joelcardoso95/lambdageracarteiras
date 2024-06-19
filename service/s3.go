@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"log"
 	"os"
 
@@ -36,7 +37,7 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 	return file, nil
 }
 
-func UploadFileToS3Bucket(bucket string, uploadFileName string, file *os.File) error {
+func UploadFileToS3Bucket(bucket string, uploadFileName string, file []byte) error {
 	// create a session
 	s3Session := session.Must(session.NewSession())
 
@@ -47,7 +48,7 @@ func UploadFileToS3Bucket(bucket string, uploadFileName string, file *os.File) e
 	_, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: &bucket,
 		Key:    &uploadFileName,
-		Body:   file,
+		Body:   bytes.NewReader(file),
 	})
 	if err != nil {
 		log.Fatalf("Failed to upload file to S3: %v", err)
