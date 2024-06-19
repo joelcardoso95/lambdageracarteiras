@@ -37,6 +37,33 @@ func DownloadFileFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 	return file, nil
 }
 
+func DownloadHtmlFromS3Bucket(bucket string, dowloadFileName string) (*os.File, error) {
+	// create a session
+	s3Session := session.Must(session.NewSession())
+
+	// create a downloader
+	downloader := s3manager.NewDownloader(s3Session)
+
+	// create a file to write the S3 Object contents to.
+	file, err := os.Create("/tmp/downloaded.html")
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("starting s3 download")
+	// download the file from S3
+	n, err := downloader.Download(file, &s3.GetObjectInput{
+		Bucket: &bucket,
+		Key:    &dowloadFileName,
+	})
+	if err != nil {
+		log.Fatalf("Failed to download from S3: %v", err)
+	}
+
+	log.Printf("file downloaded, %d bytes\n", n)
+	return file, nil
+}
+
 func UploadFileToS3Bucket(bucket string, uploadFileName string, file []byte) error {
 	// create a session
 	s3Session := session.Must(session.NewSession())
