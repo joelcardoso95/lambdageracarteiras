@@ -65,6 +65,7 @@ func DownloadHtmlFromS3Bucket(bucket string, dowloadFileName string) (*os.File, 
 }
 
 func UploadFileToS3Bucket(bucket string, uploadFileName string, file []byte) error {
+	log.Println("Uploaling S3 File", uploadFileName)
 	// create a session
 	s3Session := session.Must(session.NewSession())
 

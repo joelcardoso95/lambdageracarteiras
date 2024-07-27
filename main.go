@@ -16,16 +16,20 @@ type RequestPDF struct {
 	body []byte
 }
 
+type PageData struct {
+	People []models.Person
+}
+
 func main() {
 	lambda.Start(LambdaExecute)
 }
 
 func LambdaExecute(context context.Context) (string, error) {
-	s3File, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva", "excel/users.csv")
+	s3File, err := service.DownloadFileFromS3Bucket("carteiras-adviladiva", "excel/cadastro-igreja.csv")
 	if err != nil {
 		log.Fatalf("Failed to download from S3: %v", err)
 	}
-	people, err := service.ReadCSV(s3File.Name())
+	peopleCSV, err := service.ReadCSV(s3File.Name())
 	if err != nil {
 		log.Fatalf("Failed to read CSV: %v", err)
 		return "", err
@@ -37,33 +41,44 @@ func LambdaExecute(context context.Context) (string, error) {
 
 	}
 
-	for _, person := range people {
-		pdfRequest := &RequestPDF{}
-		if err != nil {
-			log.Fatalf("Failed to read HTML file: %v", err)
-			return "", err
-		}
-		err = pdfRequest.ParseTemplate(htmlFile.Name(), *person)
-		if err != nil {
-			log.Fatalf("Failed to parse template: %v", err)
-			return "", err
-		}
-		log.Println("Successfully Generated HTML Files Bytes", pdfRequest.body)
-		service.UploadFileToS3Bucket("carteiras-adviladiva", "pdf/"+person.Name+".html", pdfRequest.body)
-		log.Println("Successfully Uploaded Files to S3 Bucket")
+	var persons []models.Person
+	for _, person := range peopleCSV {
+		persons = append(persons, models.Person{
+			Name:     person.Name,
+			BirthDay: person.BirthDay,
+			CPF:      person.CPF,
+		})
 	}
+
+	pageData := PageData{
+		People: persons,
+	}
+
+	pdfRequest := &RequestPDF{}
+	if err != nil {
+		log.Fatalf("Failed to read HTML file: %v", err)
+		return "", err
+	}
+	err = pdfRequest.ParseTemplate(htmlFile.Name(), pageData)
+	if err != nil {
+		log.Fatalf("Failed to parse template: %v", err)
+		return "", err
+	}
+	log.Println("Successfully Generated HTML Files Bytes", pdfRequest.body)
+	service.UploadFileToS3Bucket("carteiras-adviladiva", "pdf/"+"carteiras-geradas"+".html", pdfRequest.body)
+	log.Println("Successfully Uploaded Files to S3 Bucket")
 
 	return "Successfully generated HTML Files", nil
 }
 
 // write the code to parse template and return de buffer
-func (r *RequestPDF) ParseTemplate(htmlTemplate string, person models.Person) error {
+func (r *RequestPDF) ParseTemplate(htmlTemplate string, pageData PageData) error {
 	t, err := template.ParseFiles(htmlTemplate)
 	if err != nil {
 		return err
 	}
 	buf := new(bytes.Buffer)
-	if err = t.Execute(buf, person); err != nil {
+	if err = t.Execute(buf, pageData); err != nil {
 		return err
 	}
 	r.body = buf.Bytes()
