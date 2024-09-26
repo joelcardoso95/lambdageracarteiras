@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carteirinha</title>
+    <style>
+        .carteirinha-box {
+            width: 300px;
+            height: 100px;
+            border: 1px solid black;
+            padding: 50px;
+            margin: 20px;
+            background-image: url(./Untitled.png);
+            background-size: cover;
+        }
+
+        .texto-igreja {
+            margin-top: -50px;
+            text-align: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .dados {
+            margin-top: 30px;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        .pastor {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+{{range .People}}
+    <div class="carteirinha-box">
+        <div class="triangulo">
+            <div class="triangulo-overlay">
+                <div class="texto-igreja">
+                    <div>IGREJA EVANGELICA</div>
+                    <div>ASSEMBLEIA DE DEUS VILA DIVA</div>
+                    <div>RUA SÃO SABINO, 476 - VILA DIVA - SÃO PAULO/SP</div>
+                    <div>CNPJ: 01.385.568/0001-30</div>
+                </div>
+                    <div class="dados">
+                        <div>Nome: {{.Name}}</div>
+                        <div>CPF: {{.CPF}}</div>
+                        <div>Cargo:</div>
+                        <div>Data de Nascimento: {{.BirthDay}}</div>
+                        <div>Validade:</div>
+                    </div>
+                <div class="pastor">Pastor Presidente: Wilson Roberto Anholeto</div>
+            </div>
+        </div>
+    </div>
+{{end}}
+</body>
+
+</html>

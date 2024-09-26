@@ -1,0 +1,31 @@
+
+.carteirinha-box {
+    width: 300px;
+    height: 100px;
+    border: 1px solid black;
+    padding: 50px;
+    margin: 20px;
+    background-image: url(../Untitled.png);
+    background-size: cover;
+}
+
+.texto-igreja{
+    margin-top: -50px;
+    text-align: center;
+    font-size: 8px;
+    font-weight: bold;
+}
+
+.dados{
+    margin-top: 30px;
+    text-align: left;
+    font-size: 10px;
+}
+
+.pastor{
+    margin-top: 30px;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    font-style: italic;
+}

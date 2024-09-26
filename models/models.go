@@ -4,5 +4,6 @@ package models
 type Person struct {
 	Name     string `csv:"Nome"`
 	BirthDay string `csv:"Data Nascimento"`
-	CPF      string `csv:"CPF"`
+	Position string `csv:"Data Nascimento"`
+	CPF      string `csv:"Selecione o Cargo"`
 }

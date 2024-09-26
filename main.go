@@ -3,12 +3,12 @@ package main
 import (
 	"bytes"
 	"context"
-	"log"
-	"text/template"
-
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/lambdageracarteiras/models"
 	"github.com/lambdageracarteiras/service"
+	"log"
+	"text/template"
+	"time"
 )
 
 // RequestPDF struct
@@ -35,7 +35,7 @@ func LambdaExecute(context context.Context) (string, error) {
 		return "", err
 	}
 
-	htmlFile, err := service.DownloadHtmlFromS3Bucket("carteiras-adviladiva", "html/carteira.html")
+	htmlFile, err := service.DownloadHtmlFromS3Bucket("carteiras-adviladiva", "html/index.html")
 	if err != nil {
 		log.Fatalf("Failed to download HTML from S3: %v", err)
 
@@ -43,11 +43,18 @@ func LambdaExecute(context context.Context) (string, error) {
 
 	var persons []models.Person
 	for _, person := range peopleCSV {
-		persons = append(persons, models.Person{
-			Name:     person.Name,
-			BirthDay: person.BirthDay,
-			CPF:      person.CPF,
-		})
+		if person.Name != "" {
+			birthday, err := time.Parse("1/2/2006", person.BirthDay)
+			if err != nil {
+				log.Fatalf("Failed to parse date: %v", err)
+				return "", err
+			}
+			persons = append(persons, models.Person{
+				Name:     person.Name,
+				BirthDay: birthday.Format("02/01/2006"),
+				CPF:      person.CPF,
+			})
+		}
 	}
 
 	pageData := PageData{
